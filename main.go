@@ -69,3 +69,38 @@ func main() {
 		if err := saveTasks(tasks); err != nil {
 			fmt.Println("save error:", err)
 			return
+		}
+		fmt.Printf("added #%d: %s\n", nextID, title)
+
+	case "list":
+		if len(tasks) == 0 {
+			fmt.Println("no tasks yet!")
+			return
+		}
+		for _, t := range tasks {
+			mark := "[ ]"
+			if t.Done {
+				mark = "[x]"
+			}
+			fmt.Printf("%s #%d %s\n", mark, t.ID, t.Title)
+		}
+
+	case "done":
+		if len(os.Args) < 3 {
+			fmt.Println("give task id")
+			return
+		}
+		id, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			fmt.Println("invalid id")
+			return
+		}
+		found := false
+		for i := range tasks {
+			if tasks[i].ID == id {
+				tasks[i].Done = true
+				found = true
+				break
+			}
+		}
+		if !found {
