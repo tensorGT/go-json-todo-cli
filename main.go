@@ -104,3 +104,39 @@ func main() {
 			}
 		}
 		if !found {
+			fmt.Println("task not found")
+			return
+		}
+		_ = saveTasks(tasks)
+		fmt.Printf("task #%d marked done!\n", id)
+
+	case "delete":
+		if len(os.Args) < 3 {
+			fmt.Println("give task id")
+			return
+		}
+		id, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			fmt.Println("invalid id")
+			return
+		}
+		filtered := make([]Task, 0, len(tasks))
+		removed := false
+		for _, t := range tasks {
+			if t.ID == id {
+				removed = true
+				continue
+			}
+			filtered = append(filtered, t)
+		}
+		if !removed {
+			fmt.Println("task not found")
+			return
+		}
+		_ = saveTasks(filtered)
+		fmt.Printf("deleted #%d\n", id)
+
+	default:
+		fmt.Println("unknown command:", cmd)
+	}
+}
